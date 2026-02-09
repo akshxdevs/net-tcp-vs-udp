@@ -40,6 +40,7 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 func main() {
 	apiServer := server.NewServer()
 	go server.TCPServer()
+	go server.UDPServer()
 	// Create a done channel to signal when the shutdown is complete
 	done := make(chan bool, 1)
 
