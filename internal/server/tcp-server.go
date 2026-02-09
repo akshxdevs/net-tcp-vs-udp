@@ -16,18 +16,20 @@ func handleConn(c net.Conn) {
 	defer atomic.AddInt64(&connCount, -1)
 
 	reader := bufio.NewReader(c)
-	name, userID := "unknown", "unknown"
+	name, userID, greet := "unknown", "unknown", "unknown"
 	line, err := reader.ReadString('\n')
 	if err == nil {
 		parts := strings.Fields(strings.TrimSpace(line))
 		if len(parts) >= 3 && strings.EqualFold(parts[0], "HELLO") {
+			greet = parts[0]
 			name = parts[1]
 			userID = parts[2]
 		}
 	}
 
-	fmt.Printf("New connection from %s (%s, id=%s). Active: %d\n",
+	fmt.Printf("New connection from %s %s %s, id=%s. Active: %d\n",
 		c.RemoteAddr().String(),
+		greet,
 		name,
 		userID,
 		atomic.LoadInt64(&connCount),
